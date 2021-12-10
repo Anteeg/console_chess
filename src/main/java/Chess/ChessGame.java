@@ -15,7 +15,7 @@ public class ChessGame {
         isFinished = false;
     }
     //TODO Funktionell nedbrytning i metoder i ChessGame.
-
+// TODO
     /**
      * @return returns true if move was played, false if move was illegal
      */
