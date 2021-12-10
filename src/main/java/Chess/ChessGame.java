@@ -14,6 +14,7 @@ public class ChessGame {
         currentPlayer = PieceColor.White;
         isFinished = false;
     }
+    //TODO Funktionell nedbrytning i metoder i ChessGame.
 
     /**
      * @return returns true if move was played, false if move was illegal
