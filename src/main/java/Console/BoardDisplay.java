@@ -3,7 +3,7 @@ package Console;
 import Chess.ChessBoard;
 import Chess.Tile;
 
-public class BoardDisplay { //TODO Functional decomposition and law of demeter
+public class BoardDisplay { //TODO Functional decomposition (printBoard) and law of demeter
 
     public static void printBoard(ChessBoard board){
         clearConsole();
