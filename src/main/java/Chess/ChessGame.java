@@ -5,9 +5,21 @@ import java.util.ArrayList;
 
 public class ChessGame {
 
+    // TODO det borde finnas en metod som tar en tuple som argument och returnar en Piece. Detta hade gjort att mycket
+    //  kodduplicering hade kunnat undvikas.
+    //  Sättet att få en Piece nu: tuple -> tile -> piece
+    //  Borde finnas en funktion sådan att: tuple -> piece.
+
+    // TODO borde även finnas en funktion som endast flyttar en Piece (alltså flyttar en piece och gör rutan den stod
+    //  på tom). Detta hade också hjälpt undvika kodduplicering och göra koden mer lättläst.
+
+    // TODO borde även finnas en funktion för att revert temporary move
+    //  toTile.setPiece(toPiece);
+    //  fromTile.setPiece(piece);
     private final ChessBoard board;
     private boolean isFinished;
     private PieceColor currentPlayer; // The current player, uses Enumeration PieceColor, can either be black or white
+    // TODO borde ha bättre namngivning
 
     public ChessGame(){
         board = new ChessBoard(); // The chess board
@@ -110,14 +122,16 @@ public class ChessGame {
                 ? isValidMoveForPieceRepeatable(from, to)
                 : isValidMoveForPieceNonRepeatable(from, to);
     }
+    // TODO tror inte det är så bra att repeatbleMoves används här då båda metoderna som kan kallas här har lite kodduplicering.
 
-    // Check whether a given move is valid for a piece without repeatable moves.
+    // Check whether a given move is valid for a piece without repeatable moves. (pjäser som int har exakt förstämda moves, tex drottning)
     private boolean isValidMoveForPieceRepeatable(Tuple from, Tuple to) {
         ChessPiece fromPiece = board.getTileFromTuple(from).getPiece(); //TODO denna bryter mot Law of Demeter
         Move[] validMoves = fromPiece.getMoves();
         int xMove = to.X() - from.X();
         int yMove = to.Y() - from.Y();
 
+        // 7 används här för det är den längsta sträckan en pjäs kan röra på sig
         for(int i = 1; i <= 7; i++){
             for(Move move : validMoves) {
                 //generally check for possible move
@@ -137,13 +151,13 @@ public class ChessGame {
         }
         return false;
     }
+    // TODO skulle eventuellt bryta ner denna med funktionell nedbrytning
 
-    // Check whether a given move is valid for a piece with repeatable moves.
+    // Check whether a given move is valid for a piece with repeatable moves. (pjäser som har exakt förstämda moves, tex häst)
     private boolean isValidMoveForPieceNonRepeatable(Tuple from, Tuple to){
-        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece();
+        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece(); //TODO denna bryter mot Law of Demeter
         Move[] validMoves = fromPiece.getMoves();
         Tile toTile = board.getTileFromTuple(to);
-
         int xMove = to.X() - from.X();
         int yMove = to.Y() - from.Y();
 
@@ -165,11 +179,13 @@ public class ChessGame {
         }
         return false;
     }
+    // TODO denna och den tidigare metoden är ganska lika, och har lite kodduplicering (tex moveX). Man skulle nog kunna
+    //  ha en del i samma metod och sen ha en if-sats för repeatableMoves där de skiljer sig åt.
 
     // Determine wheter the Pawn at 'from' on 'board' has moved yet.
     public boolean isFirstMoveForPawn(Tuple from, ChessBoard board){
         Tile tile = board.getTileFromTuple(from);
-        if (tile.isEmpty() || tile.getPiece().getPieceType() != PieceType.Pawn) {
+        if (tile.isEmpty() || tile.getPiece().getPieceType() != PieceType.Pawn) { //TODO denna bryter mot Law of Demeter
             return false;
         } else {
             PieceColor color = tile.getPiece().getColor();
@@ -178,9 +194,12 @@ public class ChessGame {
                     : from.Y() == 1;
         }
     }
+    // TODO ett lättare sätt för att avgöra om bonden har flyttats vore att ha en boolean hasMoved i pawn (eller i alla)
+    //  som startar som false och som sen ändras till true. Då slipper man hela den här uträkningen och metoden.
 
     /* -----------------------------------------------------------------------------------------------------------*/
 
+    //Kollar så man inte sätter sig själv i schack.
     private boolean isKingCheck(PieceColor kingColor){
         Tuple kingLocation = board.getKingLocation(kingColor);
         return canOpponentTakeLocation(kingLocation, kingColor);
@@ -227,7 +246,6 @@ public class ChessGame {
                 if (!isKingCheck(color)){
                     canPreventCheck = true;
                 }
-
                 //revert temporary move
                 toTile.setPiece(toPiece);
                 fromTile.setPiece(piece);
@@ -239,6 +257,7 @@ public class ChessGame {
         }
         return canPreventCheck;
     }
+    // TODO funktionell nedbrytning skulle vara bra här.
 
     // A utility function that gets all the possible moves for a piece, with illegal ones removed.
     // NOTICE: Does not check for counter-check when evaluating legality.
@@ -251,6 +270,9 @@ public class ChessGame {
                 ? validMovesRepeatable(piece, currentLocation)
                 : validMovesNonRepeatable(piece, currentLocation);
     }
+    // TODO har samma problem som isValidMoveForPiece. validMovesRepeatable och validMovesNonRepeatable har kodduplicering,
+    //  det som skiljer dom åt är vad som händer i for(Move move: moves). Så ha en if-sats som avgör om piece har repeatable
+    //  moves och välj sedan efter det vilken "implementation" av for-loopen som ska köras (i form av 2 olika metoder).
 
     // Returns the Tuples representing the Tiles to which the given piece
     // can legally move.

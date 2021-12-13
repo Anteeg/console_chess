@@ -39,5 +39,4 @@ public abstract class ChessPiece {
     public static PieceColor opponent(PieceColor color) {
         return (color == PieceColor.Black) ? PieceColor.White : PieceColor.Black;
     }
-
 }
