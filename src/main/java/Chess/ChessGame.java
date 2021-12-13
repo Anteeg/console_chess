@@ -101,9 +101,9 @@ public class ChessGame {
 
     /* -----------------------------------------------------------------------------------------------------------*/
 
-    // Checks whether a given move from from one tuple to another is valid.
+    // Checks whether a given move from one tuple to another is valid.
     private boolean isValidMoveForPiece(Tuple from, Tuple to){
-        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece();
+        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece(); //TODO denna bryter mot Law of Demeter
         boolean repeatableMoves = fromPiece.hasRepeatableMoves();
 
         return repeatableMoves
@@ -113,25 +113,21 @@ public class ChessGame {
 
     // Check whether a given move is valid for a piece without repeatable moves.
     private boolean isValidMoveForPieceRepeatable(Tuple from, Tuple to) {
-        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece();
+        ChessPiece fromPiece = board.getTileFromTuple(from).getPiece(); //TODO denna bryter mot Law of Demeter
         Move[] validMoves = fromPiece.getMoves();
-
         int xMove = to.X() - from.X();
         int yMove = to.Y() - from.Y();
 
         for(int i = 1; i <= 7; i++){
             for(Move move : validMoves) {
-
                 //generally check for possible move
                 if (move.x * i == xMove && move.y * i == yMove) {
-
                     //if move is generally valid - check if path is valid up till i
                     for (int j = 1; j <= i; j++){
                         Tile tile = board.getTileFromTuple(new Tuple(from.X() + move.x * j, from.Y() +move.y * j));
                         //if passing through non empty tile return false
                         if (j != i && !tile.isEmpty())
                             return false;
-
                         //if last move and toTile is empty or holds opponents piece, return true
                         if (j == i && (tile.isEmpty() || tile.getPiece().getColor() != currentPlayer))
                             return true;
