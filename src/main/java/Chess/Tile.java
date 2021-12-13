@@ -1,6 +1,6 @@
 package Chess;
 
-
+// TODO bör den verkligen vara public?
 public class Tile {
 
     private ChessPiece piece;
