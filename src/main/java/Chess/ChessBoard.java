@@ -15,7 +15,7 @@ public class ChessBoard {
 
     public Tile[][] getBoardArray(){
         return board;
-    }
+    } //TODO Functional decomposition and breaking law of demeter.
 
     private void initializeBoard(){
         for(int i = 0; i < 8; i++){
