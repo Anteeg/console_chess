@@ -15,7 +15,7 @@ public class Program {
         ChessGame game = new ChessGame();
         BoardDisplay.clearConsole();
         BoardDisplay.printBoard(game.getBoard());
-        while (!game.isFinished()) {
+        while (!game.isFinished()) { //TODO move the while loop to an external method for fuctional decomposition eg (Separation of concern) or move to a new class MVC is wrong
             System.out.println("Enter move (eg. A2-A3): ");
             String input = scanner.nextLine();
 

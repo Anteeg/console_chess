@@ -6,7 +6,7 @@ public class Tile {
     private ChessPiece piece;
     private final TileColor color;
 
-    public enum TileColor{
+    public enum TileColor{ //TODO Overloading, create getter
         White, Black
     }
 
